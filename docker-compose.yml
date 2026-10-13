@@ -1,0 +1,16 @@
+services:
+  bot:
+    build: .
+    env_file: .env
+    depends_on: [mock-1c]
+    restart: unless-stopped
+
+  # Убрать этот сервис и поменять ODATA_URL в .env, чтобы работать с настоящей 1С.
+  mock-1c:
+    build: .
+    command: ["uvicorn", "mock_1c.server:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
